@@ -26,7 +26,7 @@ public class UIResolver : MonoBehaviour
         SetTexts();
     }
 
-    private void SetTexts()
+    public void SetTexts()
     {
         _textLocalizable = GetComponent<TextMeshProUGUI>();
         foreach (LangResolver langresolver in _resolvers)
