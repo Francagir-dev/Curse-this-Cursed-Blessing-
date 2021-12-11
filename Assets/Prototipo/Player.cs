@@ -24,8 +24,10 @@ public class Player : MonoBehaviour
     Collider col;
 
     bool dashEnab;
-    float xMove;
-    float zMove;
+    float xMove = 0;
+    float zMove = 0;
+
+    PlayerInput input;
 
     [SerializeField] DialogueRunner runner;
     [SerializeField] TextMeshProUGUI textLife;
@@ -36,21 +38,27 @@ public class Player : MonoBehaviour
         instance = this;
         rig = GetComponent<Rigidbody>();
         col = GetComponent<Collider>();
+
+        //input = new PlayerInput();
+        //input.Enable();
+        //input.Player.Movement.performed += OnMove;
+        //input.Player.Dash.performed += _ => Dash();
     }
 
     private void FixedUpdate()
     {
         textLife.text = "Life: " + life;
-        xMove = Input.GetAxis("Horizontal");
-        zMove = Input.GetAxis("Vertical");
 
         rig.velocity = new Vector3(xMove * speed, 0, zMove * speed);
         if (xMove != 0 || zMove != 0)transform.rotation = Quaternion.LookRotation(rig.velocity);
     }
 
-    void OnMove(InputAction.CallbackContext cont)
+    public void OnMove(InputAction.CallbackContext cont)
     {
-
+        Vector2 move = cont.ReadValue<Vector2>();
+        Debug.Log(move);
+        xMove = move.x;
+        zMove = move.y;
     }
 
     void Dash()

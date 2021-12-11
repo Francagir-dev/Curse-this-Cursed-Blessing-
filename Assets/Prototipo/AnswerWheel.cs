@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.InputSystem;
 
 public class AnswerWheel : MonoBehaviour
 {
@@ -13,11 +14,32 @@ public class AnswerWheel : MonoBehaviour
         public Slider slider;
         public Image image;
     }
-    
+
     [SerializeField] WheelParts[] wheelParts;
 
     Coroutine coroutine;
     Enemy answerTo;
+    PlayerInput input;
+
+    bool isPressed = false;
+    Vector2 selectedOption;
+
+    private void Awake()
+    {
+        //input = new PlayerInput();
+        //input.Enable();
+        //input.Player.SelectOption.performed += Option; 
+    }
+
+    public void Option(InputAction.CallbackContext cont)
+    {
+        selectedOption = cont.ReadValue<Vector2>();
+    }
+
+    public void OnTrigger(InputAction.CallbackContext cont)
+    {
+        isPressed = cont.performed;
+    }
 
     public void SetAnswers(string[] answers, float time, Enemy target)
     {
@@ -29,6 +51,7 @@ public class AnswerWheel : MonoBehaviour
             wheelParts[i].slider.GoToDestination();
             wheelParts[i].slider.Slide();
         }
+        selectedOption = Vector2.zero;
 
         coroutine = StartCoroutine(Timer());
 
@@ -44,18 +67,20 @@ public class AnswerWheel : MonoBehaviour
                     wheelParts[i].image.fillAmount = remainTime / time;
                 }
 
-                float trigger = Input.GetAxis("Trigger");
-                if (trigger <= 0) playerFollow.overrided = false;
+                bool trigger = isPressed;
 
-                if (trigger >= 1)
+                if (!trigger) playerFollow.overrided = false;
+
+                if (trigger)
                 {
                     playerFollow.SetOverride(Vector3.one);
 
-                    if (Input.GetButtonDown("Y")) SelectedAnsw(0);
-                    if (Input.GetButtonDown("B")) SelectedAnsw(1);
-                    if (Input.GetButtonDown("A")) SelectedAnsw(2);
-                    if (Input.GetButtonDown("X")) SelectedAnsw(3);
+                    if (selectedOption.y > 0) SelectedAnsw(0);
+                    if (selectedOption.x > 0) SelectedAnsw(1);
+                    if (selectedOption.y < 0) SelectedAnsw(2);
+                    if (selectedOption.x < 0) SelectedAnsw(3);
                 }
+
                 remainTime -= Time.deltaTime;
                 yield return null;
             }
@@ -71,6 +96,7 @@ public class AnswerWheel : MonoBehaviour
 
         void SelectedAnsw(int answ)
         {
+            selectedOption = Vector2.zero;
             StopCoroutine(coroutine);
             for (int i = 0; i < wheelParts.Length; i++)
             {
