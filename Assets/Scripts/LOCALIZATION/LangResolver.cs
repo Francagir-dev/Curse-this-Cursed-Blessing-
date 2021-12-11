@@ -22,7 +22,6 @@ public class LangResolver : SingletonPattern<LangResolver>
     {
         _csvLoader.LoadCsv();
         //_sysLang = Application.systemLanguage;
-
         GetDictionary();
     }
 

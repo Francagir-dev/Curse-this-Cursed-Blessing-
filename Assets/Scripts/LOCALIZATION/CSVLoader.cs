@@ -12,11 +12,6 @@ public class CSVLoader : SingletonPattern<CSVLoader>
     private char _surround = '"';
     private string[] _fieldSeparator = { "\",\"" };
 
-    // private void Awake()
-    // {
-    //     Instance = this;
-    // }
-
     public void LoadCsv()
     {
         _localizationCsvFile = Resources.Load<TextAsset>("Localization");
@@ -52,7 +47,7 @@ public class CSVLoader : SingletonPattern<CSVLoader>
             {
                 fields[f] = fields[f].TrimStart(' ', _surround);
                 fields[f] = fields[f].Replace("\"", "");
-                Debug.Log(fields[f]);
+               // Debug.Log(fields[f]);
             }
 
             if (fields.Length > attributeIndex)

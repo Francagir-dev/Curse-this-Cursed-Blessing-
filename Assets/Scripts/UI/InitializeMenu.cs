@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.LowLevel;
 
 public class InitializeMenu : MonoBehaviour
 {
@@ -11,7 +12,7 @@ public class InitializeMenu : MonoBehaviour
    [SerializeField] private GameObject pressAnyKeyCanvas;
    [SerializeField] private GameObject mainMenuCanvas;
    [SerializeField] private UIResolver _UIResolver;
-  
+   
  
 
    private void Awake()
