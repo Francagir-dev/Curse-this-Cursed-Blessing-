@@ -39,6 +39,7 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         instance = this;
+        isDasing = false;
         rig = GetComponent<Rigidbody>();
         col = GetComponent<Collider>();
 
