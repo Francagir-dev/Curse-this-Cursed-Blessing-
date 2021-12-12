@@ -16,16 +16,19 @@ public class Player : MonoBehaviour
 
     [Header("Dash")]
     public float speedDash;
-    public float dashDist;
     public float timeDashInv;
     public float timeDashCool;
 
     Rigidbody rig;
     Collider col;
 
-    bool dashEnab;
+    public static bool isDasing = false;
+    bool dashEnab = true;
     float xMove = 0;
     float zMove = 0;
+
+    float xMoveDash;
+    float zMoveDash;
 
     PlayerInput input;
 
@@ -49,7 +52,7 @@ public class Player : MonoBehaviour
     {
         textLife.text = "Life: " + life;
 
-        rig.velocity = new Vector3(xMove * speed, 0, zMove * speed);
+        rig.velocity = new Vector3((isDasing ? xMoveDash : xMove) * speed, 0, (isDasing ? zMoveDash : zMove) * speed);
         if (xMove != 0 || zMove != 0)transform.rotation = Quaternion.LookRotation(rig.velocity);
     }
 
@@ -61,25 +64,31 @@ public class Player : MonoBehaviour
         zMove = move.y;
     }
 
-    void Dash()
+    public void Dash()
     {
         if (!dashEnab) return;
 
-        Vector3 direction;
+        if (xMove + zMove == 0) {
+            xMoveDash = transform.forward.x;
+            zMoveDash = transform.forward.z;
+        }
+        else
+        {
+            xMoveDash = xMove;
+            zMoveDash = zMove;
+        }
 
-        if (xMove + zMove == 0) direction = transform.forward;
-        else direction = new Vector3(xMove, 0, zMove);
-
-
+        xMoveDash *= speedDash;
+        zMoveDash *= speedDash;
 
         StartCoroutine(Invecibility());
         StartCoroutine(Cooldown());
 
         IEnumerator Invecibility()
         {
-            col.enabled = false;
+            isDasing = true;
             yield return new WaitForSeconds(timeDashInv);
-            col.enabled = true;
+            isDasing = false;
         }
 
         IEnumerator Cooldown()

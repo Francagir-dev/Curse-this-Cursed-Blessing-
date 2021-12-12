@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class GameStartup : MonoBehaviour
 {
@@ -8,11 +9,19 @@ public class GameStartup : MonoBehaviour
 
     [SerializeField] GameObject win;
     [SerializeField] GameObject lose;
+
+    PlayerInput input;
+    bool pressed;
     void Awake()
     {
         instance = this;
         Time.timeScale = 1;
         Application.targetFrameRate = 60;
+    }
+
+    public void Pressed(InputAction.CallbackContext cont)
+    {
+        pressed = cont.performed;
     }
 
     public void EndGame(bool win)
@@ -24,7 +33,7 @@ public class GameStartup : MonoBehaviour
         StartCoroutine(WaitInput());
         IEnumerator WaitInput()
         {
-            while (!Input.GetKeyDown(KeyCode.Space))
+            while (!pressed)
             {
                 yield return null;
             }

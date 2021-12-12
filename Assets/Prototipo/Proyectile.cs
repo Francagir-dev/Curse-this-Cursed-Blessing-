@@ -15,11 +15,12 @@ public class Proyectile : MonoBehaviour
     {
         if(Vector3.Distance(transform.position, Player.instance.transform.position) < distance)
         {
+            if (Player.isDasing) return;
             Destroy(gameObject);
             Player.instance.life -= 1;
             if (Player.instance.life <= 0) GameStartup.instance.EndGame(false);
         }
-        transform.position += transform.forward * speed * Time.deltaTime;
 
+        transform.position += transform.forward * speed * Time.deltaTime;
     }
 }
